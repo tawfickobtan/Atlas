@@ -29,7 +29,7 @@ messages = [
 response = complete(messages)
 messages.append(response)
 print("James:")
-print(response)
+print(response.content)
 print("_________________")
 print()
 
@@ -42,3 +42,22 @@ while True:
         "role": "user",
         "content": userInput
     })
+
+    while True:
+        response = complete(messages)
+        messages.append(response)
+
+        if response.tool_calls:
+            for tool_call in response.tool_calls:
+                id = tool_call.id
+                name = tool_call.function.name
+                args = json.loads(tool_call.function.arguments)
+                result = functionRegistry[name](**args)
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": id,
+                    "content": str(result)
+                })
+        else:
+            print(response.content)
+            break
