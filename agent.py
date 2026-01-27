@@ -17,7 +17,9 @@ functionRegistry = {
     "getItemsInPath": tools.getItemsInPath,
     "writeIntoFile": tools.writeIntoFile,
     "readFile": tools.readFile,
-    "runPythonFile": tools.runPythonFile
+    "runPythonFile": tools.runPythonFile,
+    "reason": tools.reason,
+    "createEmptyFile": tools.createEmptyFile
 }
 
 # Initialise messages with system prompt
@@ -52,6 +54,7 @@ while True:
                 id = tool_call.id
                 name = tool_call.function.name
                 args = json.loads(tool_call.function.arguments)
+                print(name, (str(args) if len(str(args)) < 100 else "args too long"))
                 result = functionRegistry[name](**args)
                 messages.append({
                     "role": "tool",
