@@ -1,7 +1,9 @@
+import os
 from llm import complete
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
+from rich.markdown import Markdown
 import tools
 import json
 
@@ -48,9 +50,13 @@ welcome_panel = Panel(
     big_text + welcome_text + "\n" + version_text,
     title="🚀 Agent Started",
     border_style="green",
-    padding=(0, 1)
+    padding=(0, 10),
+    expand=False
 )
 console.print(welcome_panel)
+console.print(Text("Model: ", style="bold yellow") + Text(config.get("model", "openai/gpt-oss-120b"), style="white"))
+console.print(Text("Current Directory: ", style="bold yellow") + Text(os.getcwd(), style="white"))
+
 console.print()  # Blank line for spacing
 
 # Initialise messages with system prompt
@@ -59,15 +65,28 @@ messages = [
      "content": systemPrompt}
 ]
 
+agentPanel = Panel("🤖 James:",
+                     border_style="green",
+                     expand=False,
+                     style="bold cyan")
+
+UserPanel = Panel("💭 User:",
+                     border_style="green",
+                     expand=False,
+                     style="bold magenta")
+
+toolPanel = Text("🛠️ Executing: ",
+                     style="bold red")
+
 response = complete(messages)
 messages.append(response)
-print("🤖 James:")
-print(response.content)
+console.print(agentPanel)
+print(Markdown(response.content))
 print("_________________")
 print()
 
 while True:
-    print("💭 User:")
+    console.print(UserPanel)
     userInput = input()
     print("_________________")
     print()
@@ -85,22 +104,23 @@ while True:
                 id = tool_call.id
                 name = tool_call.function.name
                 args = json.loads(tool_call.function.arguments)
-                print("🛠️ Executing:")
+                console.print(toolPanel)
                 print(name)
                 for arg in args:
-                    print(arg, (args[arg] if len(args[arg]) < 50 else args[arg][:50] + "..."))
+                    print(arg)
+                    print(args[arg] if len(args[arg]) < 50 else args[arg][:50] + "...")
                 print()
                 result = functionRegistry[name](**args)
                 print("result:")
-                print(result)
+                print(result if len(str(result)) < 50 else str(result)[:50] + "...")
                 messages.append({
                     "role": "tool",
                     "tool_call_id": id,
                     "content": str(result)
                 })
         else:
-            print("🤖 James:")
-            print(response.content)
+            console.print(agentPanel)
+            print(Markdown(response.content))
             print("_________________")
             print() 
             break
