@@ -17,7 +17,8 @@ functionRegistry = {
     "getItemsInPath": tools.getItemsInPath,
     "writeIntoFile": tools.writeIntoFile,
     "readFile": tools.readFile,
-    "runPythonFile": tools.runPythonFile
+    "runPythonFile": tools.runPythonFile,
+    "createFile": tools.createFile
 }
 
 # Initialise messages with system prompt
