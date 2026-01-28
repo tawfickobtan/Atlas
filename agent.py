@@ -1,4 +1,7 @@
 from llm import complete
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
 import tools
 import json
 
@@ -10,6 +13,8 @@ with open("config.json", "r") as f:
 systemPrompt = ""
 with open("system_prompt.txt", "r") as f:
     systemPrompt = f.read()
+
+console = Console()
 
 
 # Define function registry
@@ -29,6 +34,25 @@ functionRegistry = {
     "getFileSize": tools.getFileSize,
 }
 
+# Create welcome message
+big_text = Text("""     ██╗ █████╗ ███╗   ███╗███████╗███████╗
+     ██║██╔══██╗████╗ ████║██╔════╝██╔════╝
+     ██║███████║██╔████╔██║█████╗  ███████╗
+██   ██║██╔══██║██║╚██╔╝██║██╔══╝  ╚════██║
+╚█████╔╝██║  ██║██║ ╚═╝ ██║███████╗███████║
+╚════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝
+""", style="bold cyan")
+welcome_text = Text("Your AI Coding Agent", style="bold cyan")
+version_text = Text(f"(Version: {config.get('version', '1.0.0')})", style="dim white")
+welcome_panel = Panel(
+    big_text + welcome_text + "\n" + version_text,
+    title="🚀 Agent Started",
+    border_style="green",
+    padding=(0, 1)
+)
+console.print(welcome_panel)
+console.print()  # Blank line for spacing
+
 # Initialise messages with system prompt
 messages = [
     {"role": "system",
@@ -43,7 +67,7 @@ print("_________________")
 print()
 
 while True:
-    print("👨🏻 User:")
+    print("💭 User:")
     userInput = input()
     print("_________________")
     print()

@@ -13,10 +13,21 @@ forbidden = [
 ]
 
 def getItemsInPath(path):
-    return os.listdir(path)
+    try:
+        items = os.listdir(path)
+        return "\n".join(items)
+    except Exception:
+        return "Error occured."
 
 def createFile(file):
-    open(file, "w").close()
+    if file in forbidden:
+        return "You are not allowed to create these files."
+    try:
+        with open(file, "w", encoding="utf-8") as f:
+            pass
+        return "File created successfully."
+    except Exception as e:
+        return "Error occured: " + str(e)
 
 def writeIntoFile(file, content):
     if file in forbidden:
@@ -102,7 +113,10 @@ def runCommand(command):
         return "Error occured."
 
 def fileExists(file):
-    return os.path.exists(file)
+    try:
+        return ("Yes, " + file + " exists.") if os.path.exists(file) else ("No, " + file + " does not exist.")
+    except Exception as e:
+        return "Error occured: " + str(e)
 
 def getFileSize(file):
     try:
