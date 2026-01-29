@@ -56,8 +56,7 @@ welcome_panel = Panel(
     big_text + welcome_text + "\n" + version_text,
     title="🚀 Agent Started",
     border_style="green",
-    padding=(0, 10),
-    expand=False
+    padding=(0, 10)
 )
 console.print(welcome_panel)
 console.print(Text("Model: ", style="bold yellow") + Text(config.get("model", "openai/gpt-oss-120b"), style="white"))
@@ -91,19 +90,19 @@ response = complete(messages)
 messages.append(response)
 console.print(agentPanel)
 console.print(Markdown(response.content))
-print("_________________")
+console.print(Markdown("---"))
 print()
 
 while True:
     console.print(UserPanel)
     userInput = input()
-    print("_________________")
+    console.print(Markdown("---"))
     print()
     messages.append({
         "role": "user",
         "content": userInput
     })
-
+    console.print(agentPanel)
     while True:
         response = complete(messages)
         messages.append(response)
@@ -113,23 +112,32 @@ while True:
                 id = tool_call.id
                 name = tool_call.function.name
                 args = json.loads(tool_call.function.arguments)
-                console.print(toolPanel)
-                print(name)
+                panelText = Text("Tool: ", style="bold blue") + Text(name, style="bold white") + "\n"
                 for arg in args:
-                    print(arg)
-                    print(args[arg] if len(args[arg]) < 50 else args[arg][:50] + "...")
+                    panelText += Text(arg + "⤵️\n", style="bold yellow") + Text(args[arg] if len(args[arg]) < 50 else args[arg][:50] + "...", style="white") + "\n"
+                panelText += "\n"
+                result = ""
+                try:
+                    result = functionRegistry[name](**args)
+                except Exception as e:
+                    result = f"Error executing tool {name}: {str(e)}"
+                panelText += Text("Result⤵️\n", style="bold blue") + Text(result if len(str(result)) < 50 else str(result)[:50] + "...", style="white")
+                toolPanel = Panel(
+                    panelText,
+                    border_style="red",
+                    title="🛠️ Executing Tool: ",
+                    expand=False,
+                )
+                console.print(toolPanel)
                 print()
-                result = functionRegistry[name](**args)
-                print("result:")
-                print(result if len(str(result)) < 50 else str(result)[:50] + "...")
                 messages.append({
                     "role": "tool",
                     "tool_call_id": id,
                     "content": str(result)
                 })
         else:
-            console.print(agentPanel)
+            console.print(Text("Response:", style="bold blue"))
             console.print(Markdown(response.content))
-            print("_________________")
+            console.print(Markdown("---"))
             print() 
             break
