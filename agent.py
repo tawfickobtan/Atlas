@@ -111,12 +111,16 @@ while True:
                 name = tool_call.function.name
                 args = json.loads(tool_call.function.arguments)
                 panelText = Text("Tool: ", style="bold blue") + Text(name, style="bold white") + "\n"
-                for arg in args:
-                    panelText += Text(arg + "⤵️\n", style="bold yellow") + Text(args[arg] if len(args[arg]) < 50 else args[arg][:50] + "...", style="white") + "\n"
+                if args:
+                    for arg in args:
+                        panelText += Text(arg + "⤵️\n", style="bold yellow") + Text(args[arg] if len(args[arg]) < 50 else args[arg][:50] + "...", style="white") + "\n"
                 panelText += "\n"
                 result = ""
                 try:
-                    result = functionRegistry[name](**args)
+                    if args:
+                        result = functionRegistry[name](**args)
+                    else:
+                        result = functionRegistry[name]()
                 except Exception as e:
                     result = f"Error executing tool {name}: {str(e)}"
                 panelText += Text("Result⤵️\n", style="bold blue") + Text(result if len(str(result)) < 50 else str(result)[:50] + "...", style="white")
