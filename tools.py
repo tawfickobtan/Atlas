@@ -5,12 +5,13 @@ forbidden = [
     "agent.py",
     "config.json",
     "llm.py",
-    "README.MD",
+    "README.md",
     "tools.json",
     "tools.py",
     ".gitignore",
     ".git",
-    "system_prompt.txt"
+    "system_prompt.txt",
+    "requirements.txt"
 ]
 
 def getItemsInPath(path: str) -> str:

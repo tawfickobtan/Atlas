@@ -98,7 +98,7 @@ This project is a work in progress. Contributions are welcome! Please:
 
 ## License
 
-[Add license information here]
+MIT License - see LICENSE file
 
 ## Disclaimer
 

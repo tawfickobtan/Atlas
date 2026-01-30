@@ -1,4 +1,5 @@
 {
   "base_url": "https://api.groq.com/openai/v1",
-  "model": "openai/gpt-oss-120b"
+  "model": "openai/gpt-oss-120b",
+  "version": "1.0.1"
 }
