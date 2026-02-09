@@ -203,23 +203,6 @@
   {
     "type":"function",
     "function":{
-      "name": "runCommand",
-      "description": "Runs a shell command and returns its output. Do not resort to this function unless absolutely necessary. You must get user confirmation before running any command.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "command": {
-            "type": "string",
-            "description": "The shell command to execute."
-          }
-        },
-        "required": ["command"]
-      }
-    }
-  },
-  {
-    "type":"function",
-    "function":{
       "name": "fileExists",
       "description": "Checks if a file exists at the specified path.",
       "parameters": {
@@ -349,6 +332,55 @@
           }
         },
         "required": ["path"]
+      }
+    }
+  }
+  ,
+  {
+    "type": "function",
+    "function": {
+      "name": "moveMultipleFiles",
+      "description": "Moves multiple files from source paths to a destination directory.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of source file paths to move."
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination directory path to move the files to."
+          }
+        },
+        "required": ["sources", "destination"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "copyMultipleFiles",
+      "description": "Copies multiple files from source paths to a destination directory.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of source file paths to copy."
+          },
+          "destination": {
+            "type": "string",
+            "description": "Destination directory path to copy the files to."
+          }
+        },
+        "required": ["sources", "destination"]
       }
     }
   }

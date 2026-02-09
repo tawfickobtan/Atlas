@@ -2,6 +2,9 @@ import json
 import os
 import subprocess
 import time
+from pathlib import Path
+
+baseDir = Path(__file__).resolve().parent
 
 forbidden = [
     "agent.py",
@@ -19,7 +22,7 @@ forbidden = [
 # Load memory file
 memory = {}
 try:
-    with open("memory.json", "r", encoding="utf-8") as f:
+    with open(os.path.join(baseDir, "..", "memory/memory.json"), "r", encoding="utf-8") as f:
         memory = json.load(f)
 except Exception as e:
     memory = {}
@@ -132,6 +135,23 @@ def moveFile(source: str, destination: str) -> str:
         return "File moved successfully."
     except Exception as e:
         return "Error occured: " + str(e)
+    
+def moveMultipleFiles(sources: list, destination: str) -> str:
+    if destination in forbidden:
+        return "You are not allowed to move files to this destination."
+    success = []
+    failed = []
+    for source in sources:
+        if source in forbidden:
+            failed.append(source)
+            continue
+        try:
+            os.rename(source, os.path.join(destination, os.path.basename(source)))
+            success.append(source)
+        except Exception as e:
+            failed.append(source)
+
+    return "Successfully moved:" + "\n" +  '\n'.join(success) + "\n\n" + "Failed to move:" + "\n" + '\n'.join(failed) + "."
 
 def copyFile(source: str, destination: str) -> str:
     if source in forbidden or destination in forbidden:
@@ -143,27 +163,28 @@ def copyFile(source: str, destination: str) -> str:
     except Exception as e:
         return "Error occured: " + str(e)
     
+def copyMultipleFiles(sources: list, destination: str) -> str:
+    if destination in forbidden:
+        return "You are not allowed to copy files to this destination."
+    success = []
+    failed = []
+    for source in sources:
+        if source in forbidden:
+            failed.append(source)
+            continue
+        try:
+            import shutil
+            shutil.copy2(source, os.path.join(destination, os.path.basename(source)))
+            success.append(source)
+        except Exception as e:
+            failed.append(source)
+
+    return "Successfully copied:" + "\n" +  '\n'.join(success) + "\n\n" + "Failed to copy:" + "\n" + '\n'.join(failed) + "."
+    
 def getCurrentDirectory() -> str:
     try:
         cwd = os.getcwd()
         return cwd
-    except Exception as e:
-        return "Error occured. " + str(e)
-
-def runCommand(command: str) -> str:
-    userInput = input("Are you sure you want to run this command? (y/n): ")
-    if userInput.lower().strip() != "y":
-        return "Command execution cancelled by user."
-    try:
-        result = subprocess.run(
-            command,
-            shell=True,
-            capture_output=True,
-            text=True
-        )
-
-        output = result.stdout
-        return output
     except Exception as e:
         return "Error occured. " + str(e)
 
@@ -194,7 +215,7 @@ def renameFile(source: str, new_name: str) -> str:
 def rememberFact(key: str, fact: str) -> str:
     memory[key] = fact
     try:
-        with open("memory.json", "w", encoding="utf-8") as f:
+        with open(os.path.join(baseDir, "..", "memory/memory.json"), "w", encoding="utf-8") as f:
             json.dump(memory, f, indent=4)
         return "Fact remembered successfully."
     except Exception as e:
@@ -211,7 +232,7 @@ def forgetFact(key: str) -> str:
     try:
         if key in memory:
             del memory[key]
-            with open("memory.json", "w", encoding="utf-8") as f:
+            with open(os.path.join(baseDir, "..", "memory/memory.json"), "w", encoding="utf-8") as f:
                 json.dump(memory, f, indent=4)
             return "Fact forgotten successfully."
         else:
