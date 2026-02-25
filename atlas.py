@@ -45,9 +45,7 @@ functionRegistry = {
     "delete": tools.delete,
     "createDirectory": tools.createDirectory,
     "deleteDirectory": tools.deleteDirectory,
-    "moveFile": tools.moveFile,
     "moveMultipleFiles": tools.moveMultipleFiles,
-    "copyFile": tools.copyFile,
     "copyMultipleFiles": tools.copyMultipleFiles,
     "getCurrentDirectory": tools.getCurrentDirectory,
     "fileExists": tools.fileExists,
@@ -57,18 +55,17 @@ functionRegistry = {
     "recallFact": tools.recallFact,
     "forgetFact": tools.forgetFact,
     "listMemories": tools.listMemories,
-    "getDirectoryTree": tools.getDirectoryTree,
     "searchWeb": tools.searchWeb,
     "extractTextFromUrl": tools.extractTextFromUrl
 }
 
 # Create welcome message
-big_text = Text(""" █████╗ ████████╗██╗      █████╗ ███████╗
-██╔══██╗╚══██╔══╝██║     ██╔══██╗██╔════╝
-███████║   ██║   ██║     ███████║███████╗
-██╔══██║   ██║   ██║     ██╔══██║╚════██║
-██║  ██║   ██║   ███████╗██║  ██║███████║
-╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝
+big_text = Text(""" █████╗ ████████╗██╗      █████╗ ███████╗ ██████╗██╗     ██╗
+██╔══██╗╚══██╔══╝██║     ██╔══██╗██╔════╝██╔════╝██║     ██║
+███████║   ██║   ██║     ███████║███████╗██║     ██║     ██║
+██╔══██║   ██║   ██║     ██╔══██║╚════██║██║     ██║     ██║
+██║  ██║   ██║   ███████╗██║  ██║███████║╚██████╗███████╗██║
+╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚══════╝╚═╝
 
 
 """, style="bold white")
@@ -78,22 +75,24 @@ welcome_panel = Panel(
     big_text + welcome_text + "\n" + version_text,
     title="🚀 Agent Started",
     border_style="dim white",
+    expand=False,
     padding=(0, 10)
 )
 
 
 # Initialise Agent
+model = config.get("model", "moonshotai/Kimi-K2-Instruct-0905")
 agent = Agent(
     base_url=config.get("base_url", "https://api.groq.com/openai/v1"),
     api_key=api_key,
-    model=config.get("model", "moonshotai/Kimi-K2-Instruct-0905"),
+    model=model,
     toolsDesc=tooling,
     function_registry=functionRegistry,
     system_prompt=systemPrompt + "\n" +
     f"Current Directory: {tools.getCurrentDirectory()}\n" +
-    f"Current Directory Structure (to a depth of 3): {tools.getDirectoryTree(tools.getCurrentDirectory(), 3)}\n" +
+    f"Current Directory Contents: {tools.getItemsInPath(tools.getCurrentDirectory())}\n" +
     f"Stored Memories: {tools.listMemories()}\n" +
-    f"Model Powering you: {config.get('model', 'llama-3.3-70b-versatile')}"
+    f"Model Powering you: {model}"
                 )
 
 console.print(welcome_panel)
@@ -117,6 +116,7 @@ while True:
     userInput = input()
     console.print(Markdown("---"))
     agent.add_message("user", userInput)
+    first = True
     while True:
         with console.status("Thinking...", spinner="dots"):
             try:
@@ -124,6 +124,7 @@ while True:
             except Exception as e:
                 raise e
         if len(response) > 1:
+            first = False
             tool_call = response[0].tool_calls[0]
             id = tool_call.id
             name = tool_call.function.name
@@ -145,9 +146,12 @@ while True:
                 title="🛠️ Executing Tool: ",
                 expand=False,
             )
+            if not first:
+                console.print(Text("||", justify="center", style="white"))
+                console.print(Text("||", justify="center", style="white"))
             console.print(toolPanel)
-            print()
         else:
+            print()
             textResponse = response[0].content
             console.print(Markdown(textResponse))
             console.print(Markdown("---"))
