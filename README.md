@@ -1,15 +1,15 @@
 <div align="center">
 
 ```
- █████╗ ████████╗██╗      █████╗ ███████╗
-██╔══██╗╚══██╔══╝██║     ██╔══██╗██╔════╝
-███████║   ██║   ██║     ███████║███████╗
-██╔══██║   ██║   ██║     ██╔══██║╚════██║
-██║  ██║   ██║   ███████╗██║  ██║███████║
-╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝
+ █████╗ ████████╗██╗      █████╗ ███████╗ ██████╗██╗     ██╗
+██╔══██╗╚══██╔══╝██║     ██╔══██╗██╔════╝██╔════╝██║     ██║
+███████║   ██║   ██║     ███████║███████╗██║     ██║     ██║
+██╔══██║   ██║   ██║     ██╔══██║╚════██║██║     ██║     ██║
+██║  ██║   ██║   ███████╗██║  ██║███████║╚██████╗███████╗██║
+╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚══════╝╚═╝
 ```
 
-**Your local AI agent for file management, automation, and persistent memory.**
+**AtlasCLI — Your local AI agent for file management, automation, and persistent memory.**
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![Powered by Groq](https://img.shields.io/badge/Powered%20by-Groq-orange?style=flat)](https://groq.com)
@@ -19,9 +19,9 @@
 
 ---
 
-## What is Atlas?
+## What is AtlasCLI?
 
-Atlas is a fully local AI agent that runs right in your terminal. Talk to it in plain English and it will manage your files, browse the web, remember things you tell it, and get stuff done — all from your own machine, with your data never leaving your computer.
+AtlasCLI is a fully local AI agent CLI that runs right in your terminal. Talk to it in plain English and it will manage your files, browse the web, remember things you tell it, and get stuff done — all from your own machine, with your data never leaving your computer.
 
 No cloud storage. No subscriptions. No tracking. Just a fast, capable agent that works for you.
 
@@ -67,7 +67,7 @@ No cloud storage. No subscriptions. No tracking. Just a fast, capable agent that
 ### Installation
 
 ```bash
-git clone https://github.com/tawfickobtan/Atlas
+git clone https://github.com/tawfickobtan/AtlasCLI
 cd Atlas
 pip install -r requirements.txt
 ```
@@ -89,7 +89,7 @@ setx GROQ_API_KEY "your-groq-api-key"
 export GROQ_API_KEY="your-groq-api-key"
 ```
 
-### Run Atlas
+### Run AtlasCLI
 
 ```bash
 python atlas.py
@@ -176,7 +176,7 @@ Want to change Atlas's personality or behavior? Edit `configuration/AGENT.md` �
 ## Project Structure
 
 ```
-Atlas/
+AtlasCLI/
 ├── atlas.py                  # Main entry point & Rich terminal UI
 ├── requirements.txt          # Python dependencies
 ├── agent/
