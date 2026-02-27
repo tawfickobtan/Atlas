@@ -45,11 +45,14 @@ No cloud storage. No subscriptions. No tracking. Just a fast, capable agent that
 - Search the web and extract text content from URLs
 - Great for quick research or pulling in external information during a session
 
-### 🎨 Beautiful Terminal UI
-- Stunning ASCII art branding powered by [Rich](https://github.com/Textualize/rich)
-- Live tool execution panels showing exactly what Atlas is doing and why
-- Real-time status indicators, markdown rendering, and color-coded output
-- Built to look good and feel good to use
+### 🎨 Full Terminal UI (TUI)
+- Built with [Textual](https://github.com/Textualize/rich) — a modern, reactive TUI framework
+- Scrollable chat view with a fixed input bar and live clock header
+- Slash commands with an **autocomplete dropdown** that appears as you type `/`
+- Keyboard shortcuts shown persistently in the footer bar
+- Live status updates in the header: `Thinking...`, `Running: readFile...`
+- Tool execution panels rendered inline in the chat as Atlas works
+- Markdown rendering for all Atlas responses
 
 ### 🔒 Private by Design
 - Runs 100% locally on your machine
@@ -92,10 +95,31 @@ export GROQ_API_KEY="your-groq-api-key"
 ### Run AtlasCLI
 
 ```bash
-python atlas.py
+python app.py
 ```
 
 That's it. Start chatting!
+
+---
+
+## Slash Commands & Key Bindings
+
+| Command | What it does |
+|---|---|
+| `/clear` | Reset the conversation history |
+| `/memory` | Show everything Atlas has remembered |
+| `/save` | Export the conversation to a timestamped `.md` file |
+| `/exit` | Quit AtlasCLI cleanly |
+| `/help` | Show all commands and key bindings |
+
+Type `/` and a **dropdown list** of matching commands appears instantly — select with arrow keys or click.
+
+| Shortcut | Action |
+|---|---|
+| `Ctrl+L` | Clear chat |
+| `Ctrl+S` | Save chat |
+| `Ctrl+M` | Show memory |
+| `Ctrl+Q` | Quit |
 
 ---
 
@@ -176,7 +200,8 @@ Want to change Atlas's personality or behavior? Edit `configuration/AGENT.md` �
 
 ```
 AtlasCLI/
-├── atlas.py                  # Main entry point & Rich terminal UI
+├── app.py                    # Textual TUI entry point (run this!)
+├── atlas.py                  # Legacy Rich CLI entry point
 ├── requirements.txt          # Python dependencies
 ├── agent/
 │   ├── agent.py              # Core Agent class with tool-calling loop
@@ -196,7 +221,8 @@ AtlasCLI/
 | Component | Technology |
 |---|---|
 | LLM API | [Groq](https://groq.com) (OpenAI-compatible) |
-| Terminal UI | [Rich](https://github.com/Textualize/rich) |
+| TUI Framework | [Textual](https://github.com/Textualize/textual) |
+| Rich Rendering | [Rich](https://github.com/Textualize/rich) |
 | HTTP Client | [Requests](https://docs.python-requests.org/) |
 | Memory | Local JSON storage |
 | Config | JSON + Markdown system prompt |
