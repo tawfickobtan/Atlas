@@ -196,6 +196,21 @@ def getCurrentDirectory() -> str:
         return cwd
     except Exception as e:
         return "Error occured. " + str(e)
+    
+def searchDirectory(path : str, name : str, k : int = 3) -> str:
+    try:
+        matches = []
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                if name.lower() in file.lower():
+                    matches.append(os.path.join(root, file))
+        if matches:
+            return f"Found {len(matches)} matches, here are the first {min(k, len(matches))}:\n" + "\n".join(matches[:k])
+        else:
+            return "No files found in the directory."
+    except Exception as e:
+        return "Error occured. " + str(e)
+
 
 def fileExists(file: str) -> str:
     try:

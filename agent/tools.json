@@ -169,6 +169,32 @@
   {
     "type":"function",
     "function":{
+      "name": "searchDirectory",
+      "description": "Searches a file in a directory and returns matching file paths.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Directory path to search in."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the file to search for."
+          },
+          "k": {
+            "type": "integer",
+            "description": "Maximum number of matches to return."
+          }
+        },
+        "required": ["path", "name"]
+      }
+    }
+  },
+
+  {
+    "type":"function",
+    "function":{
       "name": "fileExists",
       "description": "Checks if a file exists at the specified path.",
       "parameters": {
